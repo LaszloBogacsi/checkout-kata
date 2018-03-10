@@ -111,7 +111,7 @@ class CheckoutTest {
 
     @Test
     void can_apply_multiple_rules_when_items_not_in_order_and_some_has_no_rule() {
-        rules.add(Rule.create(1, "testType", 4, 3.0));
+        rules.add(Rule.create(1, "testType", 2, 3.0));
         rules.add(Rule.create(2, "testType", 2, 4.0));
         checkout = new Checkout(rules);
         Item itemA = Item.create("A", 2.0, 1);

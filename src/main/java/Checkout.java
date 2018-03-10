@@ -37,7 +37,7 @@ public class Checkout {
     private void applyMultibuyRule(List<Item> basket) {
         Item lastItem = basket.get(basket.size()-1);
         int lastItemCount = Collections.frequency(basket, lastItem);
-        if (lastItemCount > 1) {
+        if (lastItemCount > 1 && this.rules.size() > 0) {
             Rule rule = getRuleById(lastItem.getRuleId());
             if (lastItemCount % rule.getMinQuantityToQualify() == 0) {
                 double discount = rule.getNewPrice() - lastItem.getUnitPrice() * rule.getMinQuantityToQualify();
