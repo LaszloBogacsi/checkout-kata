@@ -15,7 +15,7 @@ class CheckoutTest {
 
     @BeforeEach
     void setUp() {
-        List<Rule> rules = new ArrayList<>();
+        rules = new ArrayList<>();
     }
 
     @Test
@@ -47,5 +47,82 @@ class CheckoutTest {
         assertEquals(checkout.getTotal(), 2.0);
     }
 
+    @Test
+    void can_apply_one_rule() {
+        rules.add(Rule.create(1, "testType", 2, 3.0));
+        checkout = new Checkout(rules);
+        Item item = Item.create("A", 2.0, 1);
+        checkout.scan(item);
+        checkout.scan(item);
+        assertEquals(checkout.getTotal(), 3.0);
+    }
+
+    @Test
+    void can_apply_one_rule_twice() {
+        rules.add(Rule.create(1, "testType", 2, 3.0));
+        checkout = new Checkout(rules);
+        Item item = Item.create("A", 2.0, 1);
+        checkout.scan(item);
+        checkout.scan(item);
+        checkout.scan(item);
+        checkout.scan(item);
+        assertEquals(checkout.getTotal(), 6.0);
+    }
+
+    @Test
+    void can_apply_one_rule_when_items_not_in_order() {
+        rules.add(Rule.create(1, "testType", 2, 3.0));
+        checkout = new Checkout(rules);
+        Item itemA = Item.create("A", 2.0, 1);
+        Item itemB = Item.create("A", 3.0);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemA);
+        assertEquals(checkout.getTotal(), 6.0);
+    }
+
+    @Test
+    void can_apply_multiple_rules() {
+        rules.add(Rule.create(1, "testType", 2, 3.0));
+        rules.add(Rule.create(2, "testType", 2, 4.0));
+        checkout = new Checkout(rules);
+        Item itemA = Item.create("A", 2.0, 1);
+        Item itemB = Item.create("B", 3.0, 2);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemB);
+        assertEquals(checkout.getTotal(), 7.0);
+    }
+
+    @Test
+    void can_apply_multiple_rules_when_items_not_in_order() {
+        rules.add(Rule.create(1, "testType", 2, 3.0));
+        rules.add(Rule.create(2, "testType", 2, 4.0));
+        checkout = new Checkout(rules);
+        Item itemA = Item.create("A", 2.0, 1);
+        Item itemB = Item.create("B", 3.0, 2);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        assertEquals(checkout.getTotal(), 7.0);
+    }
+
+    @Test
+    void can_apply_multiple_rules_when_items_not_in_order_and_some_has_no_rule() {
+        rules.add(Rule.create(1, "testType", 4, 3.0));
+        rules.add(Rule.create(2, "testType", 2, 4.0));
+        checkout = new Checkout(rules);
+        Item itemA = Item.create("A", 2.0, 1);
+        Item itemB = Item.create("B", 3.0, 2);
+        Item itemC = Item.create("C", 1.0);
+        checkout.scan(itemA);
+        checkout.scan(itemC);
+        checkout.scan(itemB);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        assertEquals(checkout.getTotal(), 8.0);
+    }
 
 }
