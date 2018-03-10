@@ -1,0 +1,6 @@
+# Intelli project files
+.idea/
+
+# Gradle
+.gradle/
+build/
