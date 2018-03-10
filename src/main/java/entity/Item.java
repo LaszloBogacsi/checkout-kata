@@ -1,8 +1,8 @@
 package entity;
 
 public class Item {
-    private String sku;
-    private double unitPrice;
+    private final String sku;
+    private final double unitPrice;
 
     private Item(String sku, double unitPrice) {
         this.sku = sku;
