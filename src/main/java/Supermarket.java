@@ -20,10 +20,10 @@ public class Supermarket {
                 Rule.create(2,"multiBuy", 3, 130.0));
 
         // Inventory of items some with defined associated rules
-        Item itemA = Item.create("A", 50, 2);
-        Item itemB = Item.create("B", 30, 1);
-        Item itemC = Item.create("C", 20);
-        Item itemD = Item.create("D", 15);
+        Item itemA = Item.create("A", 50.0, 2);
+        Item itemB = Item.create("B", 30.0, 1);
+        Item itemC = Item.create("C", 20.0);
+        Item itemD = Item.create("D", 15.0);
 
         Checkout checkout = Checkout.create(rules);
 

@@ -11,7 +11,7 @@ Implementation of a supermarket checkout that calculates the total price of a nu
 
 - clone
 - `cd checkout-kata` 
-- `gradle test` from the project folder
+- `gradle test` from the project folder or run tests from IDE
 - run the `main` method from the `Supermarket` class to play around with the checkout
 
 #### Assumptions:
@@ -32,3 +32,8 @@ Implementation of a supermarket checkout that calculates the total price of a nu
     - can not delete or modify an item once scanned
     - an item can have only one pricing rule but one rule can be applied to many items
     - pricing rules associated with items might be missing from the passed in set of rules.
+    
+- Not tested methods:
+
+    - toString() override methods
+    - log() method in Checkout that logs a string message to the standard output 
