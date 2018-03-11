@@ -116,12 +116,12 @@ class CheckoutTest {
         assertEquals(checkout.getTotal(), 8.0);
     }
 
-//    @Test
-//    void can_operate_when_there_is_no_matching_rule_present() {
-//        rules.add(Rule.create(1, "testType", 2, 3.0));
-//        checkout = new Checkout(rules);
-//        checkout.scan(itemC); // no matching rule for itemC
-//        checkout.scan(itemC);
-//        assertEquals(checkout.getTotal(), 3.0);
-//    }
+    @Test
+    void can_operate_when_there_is_no_matching_rule_present() {
+        rules.add(Rule.create(1, "testType", 2, 3.0));
+        checkout = new Checkout(rules);
+        checkout.scan(itemC); // no matching rule for itemC
+        checkout.scan(itemC);
+        assertEquals(checkout.getTotal(), 6.0);
+    }
 }

@@ -4,6 +4,7 @@ import entity.Rule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class Checkout {
     private List<Item> basket = new ArrayList<>();
@@ -38,16 +39,20 @@ public class Checkout {
         Item lastItem = basket.get(basket.size()-1);
         int lastItemCount = Collections.frequency(basket, lastItem);
         if (lastItemCount > 1 && this.rules.size() > 0) {
-            Rule rule = getRuleById(lastItem.getRuleId());
-            if (lastItemCount % rule.getMinQuantityToQualify() == 0) {
-                double discount = rule.getNewPrice() - lastItem.getUnitPrice() * rule.getMinQuantityToQualify();
-                this.basket.add(Item.create(rule.getType(), discount));
-            }
+            getRuleById(lastItem.getRuleId()).ifPresent(rule -> {
+                if (lastItemCount % rule.getMinQuantityToQualify() == 0) {
+                    double discount = rule.getNewPrice() - lastItem.getUnitPrice() * rule.getMinQuantityToQualify();
+                    this.basket.add(Item.create(rule.getType(), discount));
+                }
+            });
+
         }
     }
 
-    private Rule getRuleById(int id) {
-       return this.rules.stream().filter(rule -> rule.getRuleId() == id).findFirst().get();
+    private Optional<Rule> getRuleById(int id) {
+       return this.rules.stream()
+               .filter(rule -> rule.getRuleId() == id)
+               .findFirst();
     }
 
 }
