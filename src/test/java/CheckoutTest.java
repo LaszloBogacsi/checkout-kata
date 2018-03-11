@@ -12,6 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CheckoutTest {
     private Checkout checkout;
     private List<Rule> rules;
+    private Item itemA = Item.create("A", 1.0);
+    private Item itemB = Item.create("B", 2.0, 1);
+    private Item itemC = Item.create("C", 3.0, 2);
 
     @BeforeEach
     void setUp() {
@@ -33,17 +36,15 @@ class CheckoutTest {
     @Test
     void can_add_one_item_to_the_basket() {
         checkout = new Checkout(rules);
-        Item item = Item.create("A", 1.0);
-        checkout.scan(item);
+        checkout.scan(itemA);
         assertEquals(checkout.getBasket().size(), 1);
     }
 
     @Test
     void can_calculate_total() {
         checkout = new Checkout(rules);
-        Item item = Item.create("A", 1.0);
-        checkout.scan(item);
-        checkout.scan(item);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
         assertEquals(checkout.getTotal(), 2.0);
     }
 
@@ -51,9 +52,8 @@ class CheckoutTest {
     void can_apply_one_rule() {
         rules.add(Rule.create(1, "testType", 2, 3.0));
         checkout = new Checkout(rules);
-        Item item = Item.create("A", 2.0, 1);
-        checkout.scan(item);
-        checkout.scan(item);
+        checkout.scan(itemB);
+        checkout.scan(itemB);
         assertEquals(checkout.getTotal(), 3.0);
     }
 
@@ -61,11 +61,10 @@ class CheckoutTest {
     void can_apply_one_rule_twice() {
         rules.add(Rule.create(1, "testType", 2, 3.0));
         checkout = new Checkout(rules);
-        Item item = Item.create("A", 2.0, 1);
-        checkout.scan(item);
-        checkout.scan(item);
-        checkout.scan(item);
-        checkout.scan(item);
+        checkout.scan(itemB);
+        checkout.scan(itemB);
+        checkout.scan(itemB);
+        checkout.scan(itemB);
         assertEquals(checkout.getTotal(), 6.0);
     }
 
@@ -73,12 +72,10 @@ class CheckoutTest {
     void can_apply_one_rule_when_items_not_in_order() {
         rules.add(Rule.create(1, "testType", 2, 3.0));
         checkout = new Checkout(rules);
-        Item itemA = Item.create("A", 2.0, 1);
-        Item itemB = Item.create("A", 3.0);
-        checkout.scan(itemA);
         checkout.scan(itemB);
         checkout.scan(itemA);
-        assertEquals(checkout.getTotal(), 6.0);
+        checkout.scan(itemB);
+        assertEquals(checkout.getTotal(), 4.0);
     }
 
     @Test
@@ -86,12 +83,10 @@ class CheckoutTest {
         rules.add(Rule.create(1, "testType", 2, 3.0));
         rules.add(Rule.create(2, "testType", 2, 4.0));
         checkout = new Checkout(rules);
-        Item itemA = Item.create("A", 2.0, 1);
-        Item itemB = Item.create("B", 3.0, 2);
-        checkout.scan(itemA);
-        checkout.scan(itemA);
         checkout.scan(itemB);
         checkout.scan(itemB);
+        checkout.scan(itemC);
+        checkout.scan(itemC);
         assertEquals(checkout.getTotal(), 7.0);
     }
 
@@ -100,13 +95,12 @@ class CheckoutTest {
         rules.add(Rule.create(1, "testType", 2, 3.0));
         rules.add(Rule.create(2, "testType", 2, 4.0));
         checkout = new Checkout(rules);
-        Item itemA = Item.create("A", 2.0, 1);
-        Item itemB = Item.create("B", 3.0, 2);
-        checkout.scan(itemA);
         checkout.scan(itemB);
-        checkout.scan(itemA);
+        checkout.scan(itemC);
         checkout.scan(itemB);
-        assertEquals(checkout.getTotal(), 7.0);
+        checkout.scan(itemC);
+        checkout.scan(itemB);
+        assertEquals(checkout.getTotal(), 9.0);
     }
 
     @Test
@@ -114,15 +108,20 @@ class CheckoutTest {
         rules.add(Rule.create(1, "testType", 2, 3.0));
         rules.add(Rule.create(2, "testType", 2, 4.0));
         checkout = new Checkout(rules);
-        Item itemA = Item.create("A", 2.0, 1);
-        Item itemB = Item.create("B", 3.0, 2);
-        Item itemC = Item.create("C", 1.0);
-        checkout.scan(itemA);
+        checkout.scan(itemB);
         checkout.scan(itemC);
-        checkout.scan(itemB);
         checkout.scan(itemA);
         checkout.scan(itemB);
+        checkout.scan(itemC);
         assertEquals(checkout.getTotal(), 8.0);
     }
 
+//    @Test
+//    void can_operate_when_there_is_no_matching_rule_present() {
+//        rules.add(Rule.create(1, "testType", 2, 3.0));
+//        checkout = new Checkout(rules);
+//        checkout.scan(itemC); // no matching rule for itemC
+//        checkout.scan(itemC);
+//        assertEquals(checkout.getTotal(), 3.0);
+//    }
 }
